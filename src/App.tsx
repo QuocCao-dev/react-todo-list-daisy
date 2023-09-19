@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import { TTodo } from "./types/todo";
 
@@ -9,14 +10,19 @@ function App() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const newTodo: TTodo = {
+      id: uuidv4(),
       name,
       finished: false,
       createdAt: new Date(),
     };
     setTodoList([...todoList, newTodo]);
+    setName("");
   };
 
-  console.log(todoList);
+  const handleDelete = (id: TTodo["id"]) => {
+    const newTodoList = todoList.filter((todo) => todo.id !== id);
+    setTodoList(newTodoList);
+  };
 
   return (
     <div>
@@ -43,13 +49,16 @@ function App() {
         {/* end of form  */}
 
         {/* start: todo list */}
-        <div className="w-full bg-white">
+        <div className="w-full space-y-4 bg-white">
           {todoList.map((todo) => (
-            <div className="flex w-full px-8 py-4 bg-red-50">
+            <div className="flex w-full px-8 py-4 bg-red-50" key={todo.id}>
               <div className="flex-1">{todo.name}</div>
               <div className="w-[160px] flex items-center justify-between">
-                <button className="btn btn-sm btn-outline btn-secondary">
-                  delete
+                <button
+                  className="btn btn-sm btn-outline btn-secondary"
+                  onClick={() => handleDelete(todo.id)}
+                >
+                  Delete
                 </button>
                 <button className="btn btn-sm btn-outline btn-accent">
                   Edit
