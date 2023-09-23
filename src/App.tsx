@@ -2,26 +2,35 @@ import { FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import { TTodo } from "./types/todo";
+import useTodoList from "./hooks/use-todos";
+
+/**
+ *
+ * useState
+ * useEffect
+ * useRef
+ *
+ * useContext
+ * useCallback
+ * useMemo
+ * useReducer
+ *
+ * Custom Hook :
+ *
+ */
 
 function App() {
   const [name, setName] = useState("");
-  const [todoList, setTodoList] = useState<TTodo[]>([]);
+  const { addTodo, todoList, deleteTodo } = useTodoList();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const newTodo: TTodo = {
-      id: uuidv4(),
-      name,
-      finished: false,
-      createdAt: new Date(),
-    };
-    setTodoList([...todoList, newTodo]);
+    addTodo(name);
     setName("");
   };
 
   const handleDelete = (id: TTodo["id"]) => {
-    const newTodoList = todoList.filter((todo) => todo.id !== id);
-    setTodoList(newTodoList);
+    deleteTodo(id);
   };
 
   return (
